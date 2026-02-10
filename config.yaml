@@ -1,0 +1,26 @@
+# Configuration for PRD Analyzer
+analysis:
+  # Sections to look for in PRDs
+  required_sections:
+    - "Overview"
+    - "Goals"
+    - "Requirements"
+    - "Success Metrics"
+  
+  # Optional sections that enhance quality
+  optional_sections:
+    - "User Stories"
+    - "Technical Specifications"
+    - "Timeline"
+    - "Risks"
+    - "Dependencies"
+  
+  # Minimum word count thresholds
+  min_word_count:
+    overview: 50
+    goals: 30
+    requirements: 100
+
+output:
+  format: "json"  # Options: json, yaml, text
+  verbose: true
