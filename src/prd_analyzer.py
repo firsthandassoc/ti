@@ -31,11 +31,15 @@ class PRDAnalyzer:
         Returns:
             Dictionary containing analysis results
         """
+        completeness = self._analyze_completeness()
+        quality = self._analyze_quality()
+        statistics = self._gather_statistics()
+        
         results = {
-            "completeness": self._analyze_completeness(),
-            "quality": self._analyze_quality(),
-            "statistics": self._gather_statistics(),
-            "recommendations": self._generate_recommendations()
+            "completeness": completeness,
+            "quality": quality,
+            "statistics": statistics,
+            "recommendations": self._generate_recommendations(completeness, quality, statistics)
         }
         
         self.analysis_results = results
@@ -146,17 +150,19 @@ class PRDAnalyzer:
             "average_section_length": round(total_words / len(sections), 2) if sections else 0
         }
     
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self, completeness: Dict, quality: Dict, stats: Dict) -> List[str]:
         """
         Generate recommendations for improving the PRD.
+        
+        Args:
+            completeness: Completeness analysis results
+            quality: Quality analysis results
+            stats: Statistics results
         
         Returns:
             List of recommendation strings
         """
         recommendations = []
-        
-        # Get completeness data
-        completeness = self._analyze_completeness()
         
         # Recommendations based on missing sections
         if completeness["required_sections_missing"]:
@@ -165,14 +171,12 @@ class PRDAnalyzer:
             )
         
         # Recommendations based on quality
-        quality = self._analyze_quality()
         if quality["score"] < 70:
             recommendations.append(
                 "Consider adding more detail to key sections to improve quality score"
             )
         
         # Recommendations based on statistics
-        stats = self._gather_statistics()
         if stats["total_word_count"] < 500:
             recommendations.append(
                 "PRD appears brief. Consider expanding with more details, examples, and context"
